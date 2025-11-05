@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus AI Assistant</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f6fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      color: #222;
+    }
+    .container {
+      background: white;
+      width: 90%;
+      max-width: 480px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.8em;
+      color: #004aad;
+    }
+    #chat-box {
+      height: 280px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 15px;
+      background: #fafafa;
+      text-align: left;
+    }
+    .msg {
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      max-width: 85%;
+      word-wrap: break-word;
+    }
+    .user {
+      background: #e3f2fd;
+      align-self: flex-end;
+      text-align: right;
+    }
+    .bot {
+      background: #e8f5e9;
+      align-self: flex-start;
+      text-align: left;
+    }
+    #input-box {
+      width: 75%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+    #send-btn, #voice-btn {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      background: #004aad;
+      color: white;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+    #voice-btn {
+      background: #1b5e20;
+    }
+    #send-btn:hover, #voice-btn:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Nexus - Mobility & Vision AI</h1>
+    <div id="chat-box"></div>
+
+    <div style="margin-top: 10px;">
+      <input type="text" id="input-box" placeholder="Type or speak your query..." />
+      <button id="send-btn">Send</button>
+      <button id="voice-btn">🎤</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+    const inputBox = document.getElementById("input-box");
+    const sendBtn = document.getElementById("send-btn");
+    const voiceBtn = document.getElementById("voice-btn");
+
+    let conversationHistory = [];
+
+    // Function to display messages
+    function appendMessage(sender, text) {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `msg ${sender}`;
+      msgDiv.innerText = text;
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Function for text-to-speech
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.lang = 'en-IN';
+      speechSynthesis.speak(utterance);
+    }
+
+    // Function to send query to backend
+    async function sendMessage() {
+      const query = inputBox.value.trim();
+      if (!query) return;
+
+      appendMessage("user", query);
+      inputBox.value = "";
+
+      conversationHistory.push({ role: "user", parts: [{ text: query }] });
+
+      appendMessage("bot", "Thinking...");
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query, history: conversationHistory })
+        });
+
+        const data = await response.json();
+        const botMsg = data.response || "Sorry, I didn't understand that.";
+        
+        // Replace "Thinking..." with bot reply
+        chatBox.lastChild.innerText = botMsg;
+
+        conversationHistory.push({ role: "model", parts: [{ text: botMsg }] });
+
+        // Speak the response
+        speak(botMsg);
+      } catch (err) {
+        chatBox.lastChild.innerText = "Error connecting to server.";
+        console.error(err);
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    inputBox.addEventListener("keypress", e => {
+      if (e.key === "Enter") sendMessage();
+    });
+
+    // Voice input (Speech Recognition)
+    voiceBtn.addEventListener("click", () => {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = "en-IN";
+      recognition.start();
+
+      recognition.onresult = (event) => {
+        const voiceQuery = event.results[0][0].transcript;
+        inputBox.value = voiceQuery;
+        sendMessage();
+      };
+
+      recognition.onerror = (err) => {
+        console.error("Voice recognition error:", err);
+      };
+    });
+  </script>
+</body>
+</html>
