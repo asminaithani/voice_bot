@@ -1,0 +1,181 @@
+/* ------------------------------------------------------------------------- */
+/* 1. Global Reset & Typography */
+/* ------------------------------------------------------------------------- */
+
+/* Import a professional, clean font (Inter) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+html, body, #root, .App {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: #1f2937; /* Dark Gray for main text */
+}
+
+/* ------------------------------------------------------------------------- */
+/* 2. Layout & Main Card (Glassmorphism and Centering) */
+/* ------------------------------------------------------------------------- */
+
+/* This block ensures perfect centering (both horizontal and vertical) */
+.h-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    /* Adding a visually rich, subtle background gradient that the glass will reflect */
+    background: linear-gradient(135deg, #e0f7fa 0%, #b3e5fc 50%, #90caf9 100%);
+}
+
+/* Main Chatbot Card Styling (w-[95%] md:w-[400px] p-5) */
+.bg-white {
+    /* Glassmorphism Effect: Translucent background, soft blur, and light border */
+    background-color: rgba(255, 255, 255, 0.7); /* Frosted transparency */
+    backdrop-filter: blur(10px); /* Soft background blur */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle white border */
+    border-radius: 20px; /* Slightly more rounded edges */
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2); /* Deeper, softer shadow */
+    transition: all 0.3s ease;
+}
+
+/* Title Enhancement */
+.text-blue-700 {
+    color: #007bff; /* Brighter, more modern blue for the brand */
+    padding-bottom: 10px;
+    margin-bottom: 5px !important;
+    font-weight: 800;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Subtitle text */
+.text-gray-500 {
+    color: #4a5568;
+    margin-bottom: 15px !important;
+    padding-top: 5px;
+    font-style: italic;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 3. Chat Box Specifics */
+/* ------------------------------------------------------------------------- */
+
+/* Refine the chat box border, background, and smooth scrolling */
+.overflow-y-auto {
+    background: rgba(255, 255, 255, 0.6); /* Lighter frosted area for chat history */
+    max-height: 30rem;
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Crisp inner border */
+    border-radius: 15px;
+    padding: 10px;
+}
+
+/* Message Bubble Styles */
+.my-1 {
+    transition: background-color 0.2s ease-in-out;
+    line-height: 1.4;
+    padding: 12px 16px; 
+    border-radius: 20px; 
+    font-size: 1rem; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Clearer bubble shadow */
+}
+
+/* User Messages - Primary Accent (Bright and Energetic) */
+.bg-blue-100 {
+    background-color: #bbdefb; /* Light Sky Blue */
+    color: #1e40af; 
+}
+
+/* Bot Messages - Secondary Accent (Assistive/Health - Soft Teal) */
+.bg-green-100 {
+    background-color: #c8e6c9; /* Light Mint Green */
+    color: #065f46; 
+}
+
+/* ------------------------------------------------------------------------- */
+/* 4. Input and Button Styling (Dynamic and Big) */
+/* ------------------------------------------------------------------------- */
+
+/* Input field (Bigger and Centrally Focused) */
+.flex-1.border {
+    padding: 14px 18px !important; /* Increased padding */
+    font-size: 1.1rem; /* Prominent text size */
+    border-color: #bdbdbd; /* Soft default border */
+    transition: border-color 0.2s, box-shadow 0.3s;
+    background-color: white; /* Solid white background for contrast */
+}
+
+/* Focus state - Brighter, innovative blue glow */
+.flex-1.border:focus {
+    border-color: #007bff; 
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.3); /* Soft blue glow */
+    outline: none;
+}
+
+/* Send Button - Deep Blue Primary (ml-2 bg-blue-600) */
+.bg-blue-600.hover\:bg-blue-700 {
+    background-color: #007bff !important; /* Primary Action Blue */
+    font-weight: 600;
+    transition: all 0.2s;
+    padding: 14px 16px; 
+    line-height: 1;
+}
+.bg-blue-600.hover\:bg-blue-700:hover {
+    background-color: #0056b3 !important; /* Darker hover */
+    transform: translateY(-3px); /* Pronounced lift effect */
+    box-shadow: 0 8px 15px rgba(0, 123, 255, 0.4); 
+}
+
+/* Voice Button - Health/Assistive Teal Accent (ml-2 px-3 py-2) */
+.bg-green-600.hover\:bg-green-700 {
+    background-color: #28a745 !important; /* Vibrant Success Green */
+    font-weight: 600;
+    transition: all 0.2s;
+    padding: 14px 16px; 
+    line-height: 1;
+}
+.bg-green-600.hover\:bg-green-700:hover {
+    background-color: #1e7e34 !important; /* Darker hover */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(40, 167, 69, 0.4);
+}
+
+/* Voice Button Listening State (Pulsing Mic) */
+.bg-green-700.animate-pulse {
+    background-color: #1e7e34 !important; 
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+    animation: pulse-green 1.5s infinite;
+}
+@keyframes pulse-green {
+    0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+    70% { transform: scale(1.05); opacity: 0.8; box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+
+/* Language selector buttons (Centralized via justify-center in JSX) */
+.justify-center button {
+    font-weight: 700;
+    transition: all 0.2s;
+    border: none;
+    padding: 8px 18px;
+}
+
+/* Selected Language Button */
+.bg-blue-600.text-white {
+    background-color: #007bff !important;
+    box-shadow: 0 3px 6px rgba(0, 123, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+/* Unselected Language Button Hover */
+.bg-gray-200.text-gray-700 {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+}
+.bg-gray-200.text-gray-700:hover {
+    background-color: #d1e7ff !important; /* Very light blue hover */
+    color: #007bff !important;
+    transform: translateY(-1px);
+}
