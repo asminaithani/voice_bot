@@ -111,20 +111,13 @@
     }
 
     // Function for text-to-speech
-    function speak(text, lang = "en") {
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = 1;
-  utterance.pitch = 1;
-
-  // 🌍 Match voice to language code if possible
-  const voices = speechSynthesis.getVoices();
-  const selectedVoice = voices.find(v => v.lang.startsWith(lang)) || voices[0];
-  utterance.voice = selectedVoice;
-  utterance.lang = selectedVoice.lang;
-
-  speechSynthesis.speak(utterance);
-}
-
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.lang = 'en-IN';
+      speechSynthesis.speak(utterance);
+    }
 
     // Function to send query to backend
     async function sendMessage() {
@@ -139,20 +132,11 @@
       appendMessage("bot", "Thinking...");
 
       try {
-        // Detect user language using browser API
-        const userLang = navigator.language || navigator.userLanguage;
-
-        // Send query + language to backend
         const response = await fetch("http://127.0.0.1:5000/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-        query, 
-        history: conversationHistory,
-        language: userLang 
-  })
-});
-
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query, history: conversationHistory })
+        });
 
         const data = await response.json();
         const botMsg = data.response || "Sorry, I didn't understand that.";

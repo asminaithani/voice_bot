@@ -4,8 +4,6 @@ import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import random
-from langdetect import detect
-
 
 # --- GEMINI CONFIG ---
 GEMINI_API_KEY = "AIzaSyBjIL-5Yj0I9my2SXVMU9Mj2VAQbOJFROE"  
@@ -91,15 +89,8 @@ def chat():
     data = request.get_json()
     user_query = data.get('query', '')
     conversation_history = data.get('history', [])
-    language = data.get("language", "en")  # 👈 get user language (default English)
+    language = data.get('language', 'en')  # 🌍 MULTILINGUAL UPDATE (default: English)
 
-
-    # 🌍 AUTO-DETECT LANGUAGE USING langdetect
-    try:
-        language = detect(user_query)
-    except:
-        language = 'en'  # fallback if detection fails
-    
     if not user_query:
         return jsonify({"response": "No query provided.", "success": False}), 400
 
